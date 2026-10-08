@@ -52,7 +52,7 @@ jobs:
       # 5) Publica los reportes como artifact (también si los tests fallaron).
       - name: Publicar reporte de tests
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: reporte-tests
           path: |
