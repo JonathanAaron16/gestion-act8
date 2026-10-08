@@ -10,4 +10,4 @@ pytest-cov==7.1.0
 # --- Carnada para Dependabot (Actividad 8) ---
 # Versión vieja A PROPÓSITO: tiene vulnerabilidades conocidas (p. ej. CVE-2023-32681).
 # La app no la usa; está para que Dependabot genere la alerta y el Pull Request automático.
-requests==2.25.0
+requests==2.34.2
