@@ -23,7 +23,7 @@ jobs:
       # 1) Descarga el código. fetch-depth: 0 trae todo el historial: SonarCloud
       #    lo necesita para saber qué líneas son "código nuevo" y quién las escribió.
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
