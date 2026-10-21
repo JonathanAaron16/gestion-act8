@@ -1,18 +1,11 @@
-"""Recomendaciones de películas.
-
-VERSIÓN CON PROBLEMAS A PROPÓSITO (para la demo del Quality Gate):
-  - una variable que se asigna y nunca se usa   -> Code Smell
-  - una condición repetida a ambos lados del or -> Bug
-  - ningún test que la ejecute                  -> cobertura 0% en el código nuevo
-"""
+"""Recomendaciones de películas."""
 
 
 def recomendar(peliculas, genero, limite=3):
     """Devuelve hasta `limite` títulos del género pedido."""
-    contador = 0
     titulos = []
     for pelicula in peliculas:
-        if pelicula["genero"] == genero or pelicula["genero"] == genero:
+        if pelicula["genero"] == genero:
             titulos.append(pelicula["titulo"])
     titulos.sort()
     if len(titulos) > limite:
