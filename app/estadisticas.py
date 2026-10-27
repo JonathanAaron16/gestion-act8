@@ -1,17 +1,10 @@
-"""Estadísticas del catálogo de películas.
-
-VERSIÓN CON PROBLEMAS A PROPÓSITO (segunda demo del Quality Gate):
-  - una variable que se asigna y nunca se usa   -> Code Smell
-  - una condición repetida a ambos lados del or -> Bug
-  - ningún test que la ejecute                  -> cobertura 0% en el código nuevo
-"""
+"""Estadísticas del catálogo de películas."""
 
 
 def duracion_promedio(peliculas):
     """Promedio de duración en minutos; 0 si la lista está vacía."""
-    unidad = "minutos"
     cantidad = len(peliculas)
-    if cantidad == 0 or cantidad == 0:
+    if cantidad == 0:
         return 0
     total = sum(pelicula["duracion"] for pelicula in peliculas)
     return round(total / cantidad, 1)
