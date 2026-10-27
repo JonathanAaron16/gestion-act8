@@ -1,0 +1,76 @@
+# CI del proyecto: tests (Actividad 6) + análisis de calidad con SonarCloud (Actividad 8).
+name: CI
+
+on:
+  # Cada Pull Request contra main: es el quality gate previo al merge.
+  pull_request:
+    branches: [main]
+  # Cada push a main: mantiene actualizado el dashboard de SonarCloud y le da
+  # la "línea de base" contra la que compara el código nuevo de los PR.
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    # Este nombre es el "check" que se exige en la branch protection rule.
+    name: tests-y-calidad
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1) Descarga el código. fetch-depth: 0 trae todo el historial: SonarCloud
+      #    lo necesita para saber qué líneas son "código nuevo" y quién las escribió.
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      # 2) Instala Python y cachea las descargas de pip entre corridas.
+      - name: Configurar Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      # 3) Instala las dependencias del proyecto.
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      # 4) Corre los tests. Si alguno falla, el job termina acá en rojo.
+      #    coverage.xml  -> lo lee SonarCloud para calcular la cobertura.
+      #    htmlcov/      -> reporte navegable para descargar como artifact.
+      - name: Ejecutar tests con cobertura
+        run: >
+          pytest
+          --cov=app
+          --cov-report=xml
+          --cov-report=html
+          --junitxml=reporte-tests.xml
+
+      # 5) Publica los reportes como artifact (también si los tests fallaron).
+      - name: Publicar reporte de tests
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reporte-tests
+          path: |
+            htmlcov/
+            coverage.xml
+            reporte-tests.xml
+
+      # 6) NUEVO en la Actividad 8: SonarScanner, después de los tests.
+      #    Envía el código y la cobertura a SonarCloud (análisis estático, SAST).
+      #    sonar.qualitygate.wait=true hace que el step ESPERE el veredicto del
+      #    Quality Gate y falle si no pasa: así el check queda en rojo y la
+      #    branch protection bloquea el merge.
+      #    En los PR vale "true"; en el push a main vale "false" (solo actualiza
+      #    el dashboard, no hay nada que bloquear).
+      - name: Análisis SonarCloud + Quality Gate
+        uses: SonarSource/sonarqube-scan-action@v8
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.qualitygate.wait=${{ github.event_name == 'pull_request' }}

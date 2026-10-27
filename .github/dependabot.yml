@@ -1,0 +1,16 @@
+# Dependabot: revisa las dependencias y abre Pull Requests para actualizarlas.
+# (Las alertas y los PR de SEGURIDAD se activan además desde Settings del repo.)
+version: 2
+updates:
+  # Librerías de Python declaradas en requirements.txt
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+
+  # Actions usadas en .github/workflows (checkout, setup-python, sonar, etc.)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
