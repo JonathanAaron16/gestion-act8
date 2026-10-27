@@ -1,5 +1,5 @@
 # --- Aplicación ---
-fastapi==0.143.0
+fastapi==0.162.0
 uvicorn==0.54.0
 
 # --- Tests ---
